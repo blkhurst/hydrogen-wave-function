@@ -1,0 +1,16 @@
+[project]
+name = "wavefunction_tools"
+version = "0.1.0"
+dependencies = [
+  "numpy>=2.4.0",
+  "scipy>=1.17.0",
+  "matplotlib>=3.10.0",
+  "pytest>=9.0.0",
+]
+
+[tool.setuptools]
+packages = ["wavefunction_tools"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
