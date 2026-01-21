@@ -1,1 +1,2 @@
 from .laguerre import associated_laguerre_polynomial, laguerre_derivative
+from .legendre import associated_legendre_polynomial

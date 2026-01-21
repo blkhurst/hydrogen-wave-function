@@ -9,6 +9,16 @@ def condon_shortley_phase_factor(m: int) -> int:
     return alternating_sign(m)
 
 
+def factorial_ratio(a: int, b: int) -> float:
+    """Return a!/b! for integers 0<=a<=b using a product (avoids factorials)."""
+    if a < 0 or b < 0 or a > b:
+        raise ValueError("Require 0 <= a <= b")
+    prod = 1.0
+    for k in range(a + 1, b + 1):
+        prod /= k
+    return prod
+
+
 def binomial(n: float, k: int) -> float:
     """
     Generalized Binomial Coefficient - Multiplicative Formula
