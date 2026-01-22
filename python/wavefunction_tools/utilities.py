@@ -1,3 +1,7 @@
+Z = 1
+a0 = 1
+
+
 def alternating_sign(exponent: int) -> int:
     """Return (-1)^m for integer m."""
     # return pow((-1), exponent)
