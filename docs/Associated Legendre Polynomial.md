@@ -16,7 +16,7 @@ $$
 \text{If}\quad |m| \gt \ell\quad \text{then}\quad P_\ell^{m} = 0
 $$
 
-The **Condon-Shortley Phase Factor** $(-1)^m$ is optional, but in the spherical harmonic context, should be included **once**, either within the associated Legendre polynomials $P_l^m$ $P_l^{-m}$, or the spherical harmonics $Y_l^m$ $Y_l^{-m}$.
+The **Condon-Shortley Phase Factor** $(-1)^m$ is optional, but in the spherical harmonic context, should be included **once**, either within the associated Legendre polynomials $P_l^{\pm m}$, **or** within the spherical harmonics $Y_l^m$, but not both.
 
 ### Closed Forms
 
