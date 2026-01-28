@@ -1,6 +1,6 @@
-# Radial
+# Radial Wave Function
 
-### Radial Wave Function
+### Definition
 
 ```math
 R_{nl}(r)
@@ -26,7 +26,7 @@ $$
 P_{nl}(r) = r^2|R_{nl}(r)|^2
 $$
 
-This is the **radial probability density**, meaning $P_{nl}(r)dr$ is the probability of finding an electron in the shell $[r, r+dr]$, where $d\Omega = sin\theta d\theta d\varphi$. This assumes our spherical harmonic implementation satisfies $\int |Y_l^m|^2 d\Omega = 1$. Some authors normalise so that $\int |Y_l^m|^2 d\Omega = 4\pi$, in which case:
+This is the **radial probability density**, meaning $P_{nl}(r) dr$ is the probability of finding an electron in the shell $[r, r+dr]$. This assumes our spherical harmonic implementation satisfies $\int |Y_l^m|^2 d\Omega = 1$ where $d\Omega = \text{sin }\theta\,d\theta\,d\varphi$. Some authors normalise so that $\int |Y_l^m|^2 d\Omega = 4\pi$, in which case:
 
 $$
 P_{nl}(r) = 4\pi r^2|R_{nl}(r)|^2
