@@ -40,6 +40,22 @@ Y_\ell^{-m}(\theta,\varphi)
 
 > Notice that if the **Condon-Shortley phase factor** were included in $Y_l^m$ instead of the associated Legendre functions $P_l^{\pm m}$, the identity $Y_l^{-m}=(-1)^m\;\overline{Y_\ell^{m}(\theta,\varphi)}$ remains unchanged.
 
+### Normalisation conventions
+
+The definition above uses the common **orthonormal** convention:
+
+```math
+\int_0^{2\pi} \int_0^{\pi} |Y_l^m(\theta,\varphi)|^2 \sin\theta \, d\theta \, d\varphi = 1
+```
+
+Some authors (often in chemistry) instead use a convention where the spherical harmonics are scaled so the integral equals $4\pi$. This can make factors of $4\pi$ appear, for instance in the radial probability density.
+
+```math
+\int_\Omega |Y_l^m|^2 \; d\Omega = 4\pi,
+\qquad
+d\Omega = \sin\theta \, d\theta \, d\varphi
+```
+
 ## Resources
 
 - [Spherical harmonics - Wikipedia](https://en.wikipedia.org/wiki/Spherical_harmonics#Conventions)
