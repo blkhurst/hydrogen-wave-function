@@ -49,17 +49,18 @@ By comparison, this stores $O(n)$ radial data and $O(n^2)$ angular data. That's 
 
 #### Cartesian vs Spherical (Jacobian)
 
-It's worth noting that the sampling PDF is $P = |\psi|^2\text{ }dV$, and the cell **volume element** depends on the coordinate system being used:
+When building a **discrete PDF/CDF for sampling**, we discretise $|\psi|^2 dV$, so the cell **volume element** $dV$ depends on the coordinate system:
 
 ```math
 \begin{aligned}
-dV_{cartesian} &= dx\;dy\;dz \\
-dV_{spherical} &= r^2\;\text{sin }\theta\;dr\;d\theta\;d\varphi
+dV_{\text{cartesian}} &= dx\,dy\,dz \\
+dV_{\text{spherical}} &= r^2\sin\theta\,dr\,d\theta\,d\varphi
 \end{aligned}
 ```
 
-In **Cartesian coordinates**, each voxel has a constant volume. In **spherical coordinates**, the volume element grows with radius and depends on $\theta$.
+On a **uniform Cartesian grid**, each voxel has a constant volume.\
+On a **uniform spherical grid**, the volume element grows with radius $r$ and depends on $\theta$.
 
-The factor $r^2\text{sin }\theta$ is the **Jacobian** of the coordinate transform. For example, sampling uniforms in $r$ forgetting the $r^2$ growth would produce too many points near the center.
+The factor $r^2\sin\theta$ is the **Jacobian** of the coordinate transform. For example, sampling uniforms in $r$ forgetting the $r^2$ growth would produce too many points near the center.
 
-> The **Jacobian** is **not** a "convention", it only appears when we discretise $(r,\theta,\varphi)$ uniformly and want each array to represent its correct share of 3D volume. If we're just evaluating at points, use $|\psi|^2$ without the Jacobian.
+> The **Jacobian** is only present when converting a density into **probability** (i.e. integrating/summing) in spherical coordinates. On a uniform Cartesian grid, or when evaluating density at a point, we use $|\psi|^2$ without $dV$.
