@@ -64,3 +64,16 @@ On a **uniform spherical grid**, the volume element grows with radius $r$ and de
 The factor $r^2\sin\theta$ is the **Jacobian** of the coordinate transform. For example, sampling uniforms in $r$ forgetting the $r^2$ growth would produce too many points near the center.
 
 > The **Jacobian** is only present when converting a density into **probability** (i.e. integrating/summing) in spherical coordinates. On a uniform Cartesian grid, or when evaluating density at a point, we use $|\psi|^2$ without $dV$.
+
+### Resolution & Efficiency
+
+When first implementing this method within a compute shader on iOS, I noticed two issues:
+
+1. Orbitals cut-off in a perfect arc near corners.
+2. The same exact point being selected thousands of times.
+
+I originally assumed this was an issue with not being able to generate good random values within a shader, but the real cause was **CDF precision** (float32).
+
+A discrete CDF is built by cumulatively summing small probabilities. If these increments become too small for the numeric precision of the datatype being used, they no longer change the running total. This creates **plateaus**, where many neighbouring indices share the same CDF value. During sampling, binary search returns the first index where $F[i] \ge u$, so an entire plateau maps to the same index, causing repeated points.
+
+In practice, using **double precision (float64)** makes plateaus extremely rare. If the GPU does not support float64, compute the samples on the CPU and upload them instead. The CPU to GPU bandwidth becomes the limiting factor for performance, but is practical as long as resampling is not required per-frame.
