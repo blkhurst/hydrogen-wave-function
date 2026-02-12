@@ -9,4 +9,4 @@ from .wavefunction import (
     radial_axis,
     probability_density,
 )
-from .utilities import spherical_to_cartesian, cartesian_to_spherical
+from .utilities import spherical_to_cartesian, cartesian_to_spherical, complex_phase
