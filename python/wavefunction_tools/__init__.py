@@ -10,3 +10,5 @@ from .wavefunction import (
     probability_density,
 )
 from .utilities import spherical_to_cartesian, cartesian_to_spherical, complex_phase
+from .sample import sample_orbital
+from .sample_plane import sample_orbital_plane
