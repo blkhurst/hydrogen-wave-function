@@ -1,3 +1,6 @@
+import numpy as np
+
+
 Z = 1
 a0 = 1
 
@@ -32,3 +35,40 @@ def binomial(n: float, k: int) -> float:
     for i in range(1, k + 1):
         product *= (n + 1 - i) / i
     return product
+
+
+def spherical_to_cartesian(
+    r: np.ndarray, theta: np.ndarray, phi: np.ndarray
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Convert spherical (r,theta,phi) to Cartesian (x,y,z)."""
+    x = r * np.sin(theta) * np.cos(phi)
+    y = r * np.sin(theta) * np.sin(phi)
+    z = r * np.cos(theta)
+    return x, y, z
+
+
+def cartesian_to_spherical(
+    x: np.ndarray, y: np.ndarray, z: np.ndarray
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Convert Cartesian (x,y,z) to Spherical (r,theta,phi)."""
+    x = np.asarray(x, dtype=float)
+    y = np.asarray(y, dtype=float)
+    z = np.asarray(z, dtype=float)
+
+    r = np.sqrt(x * x + y * y + z * z)
+    safe_r = np.where(r == 0.0, 1.0, r)
+
+    theta = np.arccos(np.clip(z / safe_r, -1.0, 1.0))  # [0, pi]
+    phi = np.arctan2(y, x)  # (-pi, pi]
+    phi = np.where(phi < 0.0, phi + 2.0 * np.pi, phi)  # [0, 2pi)
+
+    return r, theta, phi
+
+
+def complex_phase(z: complex, deg=False) -> float:
+    """Return the phase (angle) of a complex number in radians."""
+    # return np.angle(z)
+    angle = np.arctan2(z.imag, z.real)
+    if deg:
+        angle *= 180.0 / np.pi
+    return angle
