@@ -1,5 +1,5 @@
 import numpy as np
-
+import numpy.typing as npt
 
 Z = 1
 a0 = 1
@@ -38,7 +38,7 @@ def binomial(n: float, k: int) -> float:
 
 
 def spherical_to_cartesian(
-    r: np.ndarray, theta: np.ndarray, phi: np.ndarray
+    r: npt.ArrayLike, theta: npt.ArrayLike, phi: npt.ArrayLike
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """Convert spherical (r,theta,phi) to Cartesian (x,y,z)."""
     x = r * np.sin(theta) * np.cos(phi)
@@ -48,7 +48,7 @@ def spherical_to_cartesian(
 
 
 def cartesian_to_spherical(
-    x: np.ndarray, y: np.ndarray, z: np.ndarray
+    x: npt.ArrayLike, y: npt.ArrayLike, z: npt.ArrayLike
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """Convert Cartesian (x,y,z) to Spherical (r,theta,phi)."""
     x = np.asarray(x, dtype=float)

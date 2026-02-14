@@ -108,7 +108,7 @@ def build_angular_pda_cda(
     return theta_grid, phi_grid, pda, cda
 
 
-def sample_cdf(cdf: np.ndarray, num_samples: int) -> np.ndarray:
+def sample_cdf(cdf: npt.ArrayLike, num_samples: int) -> np.ndarray:
     """Sample from a CDF using inverse transform sampling."""
     rng = np.random.default_rng()
     u = rng.uniform(0.0, 1.0, size=num_samples)
