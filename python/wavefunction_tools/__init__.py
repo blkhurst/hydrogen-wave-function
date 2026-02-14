@@ -9,6 +9,13 @@ from .wavefunction import (
     radial_axis,
     probability_density,
 )
-from .utilities import spherical_to_cartesian, cartesian_to_spherical, complex_phase
+from .utilities import (
+    spherical_to_cartesian,
+    cartesian_to_spherical,
+    complex_phase,
+    complex_magnitude,
+    complex_magnitude_squared,
+)
 from .sample import sample_orbital
 from .sample_plane import sample_orbital_plane
+from .superposition import time_dependent_factor, superpose_wavefunctions

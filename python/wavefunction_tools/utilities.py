@@ -65,10 +65,26 @@ def cartesian_to_spherical(
     return r, theta, phi
 
 
-def complex_phase(z: complex, deg=False) -> float:
+def complex_phase(re: npt.ArrayLike, im: npt.ArrayLike, deg=False) -> np.ndarray:
     """Return the phase (angle) of a complex number in radians."""
-    # return np.angle(z)
-    angle = np.arctan2(z.imag, z.real)
+    # return np.angle(re + 1j * im)
+    re = np.asarray(re, dtype=float)
+    im = np.asarray(im, dtype=float)
+    angle = np.arctan2(im, re)
     if deg:
         angle *= 180.0 / np.pi
     return angle
+
+
+def complex_magnitude(re: npt.ArrayLike, im: npt.ArrayLike) -> np.ndarray:
+    """Return the magnitude of a complex number."""
+    re = np.asarray(re, dtype=float)
+    im = np.asarray(im, dtype=float)
+    return np.sqrt(re**2 + im**2)
+
+
+def complex_magnitude_squared(re: npt.ArrayLike, im: npt.ArrayLike) -> np.ndarray:
+    """Return |psi|^2 from real/imag parts."""
+    re = np.asarray(re, dtype=float)
+    im = np.asarray(im, dtype=float)
+    return re * re + im * im
