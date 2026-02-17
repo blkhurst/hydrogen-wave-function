@@ -1,7 +1,7 @@
 from .laguerre import associated_laguerre_polynomial, laguerre_derivative
 from .legendre import associated_legendre_polynomial
 from .radial_wave_function import radial_wave_function, radial_distribution
-from .spherical_harmonic import spherical_harmonic
+from .spherical_harmonic import spherical_harmonic, spherical_harmonic_real
 from .wavefunction import (
     wavefunction,
     wavefunction_cartesian,
