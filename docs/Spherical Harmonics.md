@@ -56,6 +56,21 @@ Some authors (often in chemistry) instead use a convention where the spherical h
 d\Omega = \sin\theta \, d\theta \, d\varphi
 ```
 
+### Real form
+
+```math
+\begin{aligned}
+Y_{lm}^{\text{real}} &=
+\begin{cases}
+Y_l^0 & \text{ if } m=0 \\
+\sqrt{2} \, (-1)^m \, \Im \{Y_l^{|m|}\} & \text{ if } m<0 \\
+\sqrt{2} \, (-1)^m \, \Re \{Y_l^m\} & \text{ if } m>0
+\end{cases}
+\end{aligned}
+```
+
+These are often used in chemistry because they align with Cartesian-oriented "real orbitals" (e.g. $p_x,p_y$). This definition assumes the Condon-Shortley phase convention is used, regardless of whether it's implemented within $Y_l^m$ or $P_l^m$.
+
 ## Resources
 
 - [Spherical harmonics - Wikipedia](https://en.wikipedia.org/wiki/Spherical_harmonics#Conventions)
