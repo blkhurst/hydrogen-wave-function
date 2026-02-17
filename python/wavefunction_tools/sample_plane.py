@@ -21,34 +21,34 @@ def sample_orbital_plane(
         axis_limit = radial_axis(n, l)
 
     # Plane PDA & CDA
-    x_grid, y_grid, pda, cda = build_plane_pda_cda(
+    u_grid, v_grid, pda, cda = build_plane_pda_cda(
         n, l, m, plane, axis_limit, axis_resolution, basis
     )
 
-    # Sample Radial
-    xy_indices = sample_cdf(cda, num_samples)
+    # Sample Plane
+    uv_indices = sample_cdf(cda, num_samples)
 
-    x_indices = xy_indices // axis_resolution
-    y_indices = xy_indices % axis_resolution
+    u_indices = uv_indices // axis_resolution
+    v_indices = uv_indices % axis_resolution
 
-    x_samples = x_grid[x_indices]
-    y_samples = y_grid[y_indices]
+    u_samples = u_grid[u_indices]
+    v_samples = v_grid[v_indices]
 
     # Add Jitter using half cell size
-    if add_jitter == True:
+    if add_jitter:
         rng = np.random.default_rng()
-        dx = x_grid[1] - x_grid[0]
-        dy = y_grid[1] - y_grid[0]
-        x_samples += (rng.random(num_samples) - 0.5) * dx
-        y_samples += (rng.random(num_samples) - 0.5) * dy
+        du = u_grid[1] - u_grid[0]
+        dv = v_grid[1] - v_grid[0]
+        u_samples += (rng.random(num_samples) - 0.5) * du
+        v_samples += (rng.random(num_samples) - 0.5) * dv
         # Clamp?
 
     # Re-evaluate psi at sampled points
     psi = wavefunction_slice_cartesian(
-        n, l, m, plane, x_samples, y_samples, basis=basis
+        n, l, m, plane, u_samples, v_samples, basis=basis
     )
 
-    return x_samples, y_samples, psi
+    return u_samples, v_samples, psi
 
 
 def build_plane_pda_cda(
@@ -66,22 +66,27 @@ def build_plane_pda_cda(
         raise ValueError("plane must be one of: 'xy', 'xz', 'yz'")
 
     # Build grid
-    x_grid = np.linspace(-axis_limit, axis_limit, axis_resolution)
-    y_grid = np.linspace(-axis_limit, axis_limit, axis_resolution)
-    x_mesh, y_mesh = np.meshgrid(x_grid, y_grid, indexing="ij")
+    u_grid = np.linspace(-axis_limit, axis_limit, axis_resolution)
+    v_grid = np.linspace(-axis_limit, axis_limit, axis_resolution)
+    u_mesh, v_mesh = np.meshgrid(u_grid, v_grid, indexing="ij")
 
     # Compute PDA (no Jacobian required since plane is Cartesian) #? Should I discrete re-normalise?
-    re, im = wavefunction_slice_cartesian(n, l, m, plane, x_mesh, y_mesh, basis=basis)
+    re, im = wavefunction_slice_cartesian(n, l, m, plane, u_mesh, v_mesh, basis=basis)
     pda = re**2 + im**2
 
-    # Compute CDA
-    flattened_pda = pda.ravel()
-    cda = np.cumsum(flattened_pda)
-    if cda[-1] == 0.0:
-        raise ValueError("All-zero density on this plane/range.")
+    # TODO: Revisit
+    # Guard against near-zero density (e.g. nodal planes)
+    du = float(u_grid[1] - u_grid[0])
+    dv = float(v_grid[1] - v_grid[0])
+    mass = float(pda.sum()) * du * dv  # approx $\int\int |psi|^2 dudv$ on this plane
+    if mass < 1e-12:
+        raise ValueError("Near-zero probability density (e.g. nodal plane).")
+
+    flat = pda.ravel()
+    cda = np.cumsum(flat)
     cda /= cda[-1]
 
-    return x_grid, y_grid, pda, cda
+    return u_grid, v_grid, pda, cda
 
 
 def sample_cdf(cdf: npt.ArrayLike, num_samples: int) -> np.ndarray:
