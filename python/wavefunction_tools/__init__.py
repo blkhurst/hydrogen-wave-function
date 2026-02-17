@@ -7,7 +7,6 @@ from .wavefunction import (
     wavefunction_cartesian,
     wavefunction_slice_cartesian,
     radial_axis,
-    probability_density,
 )
 from .utilities import (
     spherical_to_cartesian,
