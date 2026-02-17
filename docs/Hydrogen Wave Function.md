@@ -74,7 +74,7 @@ Since $|e^{-iE_n t/\hbar}|^2 = 1$, the **probability density is time-independent
 
 ### Real orbitals
 
-In physics it's common to work with the **complex** orbitals $\psi_{nlm}(r,\theta,\phi)=R_{nl}(r)Y_l^m(\theta,\varphi)$. In chemistry, plots often use **real orbitals**, which are **real linear combinations** of the $\pm m$ complex states. These real combinations are equally valid quantum states, they're used because they produce orbitals aligned along a Cartesian axis (useful for visualising bonding and symmetry).
+In physics it's common to work with the **complex** orbitals $\psi_{nlm}(r,\theta,\varphi)=R_{nl}(r)Y_l^m(\theta,\varphi)$. In chemistry, plots often use **real orbitals**, which are **real linear combinations** of the $\pm m$ complex states. These real combinations are equally valid quantum states, they're used because they produce orbitals aligned along a Cartesian axis (useful for visualising bonding and symmetry).
 
 ```math
 \begin{aligned}
