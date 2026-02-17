@@ -4,8 +4,8 @@ import numpy as np
 import numpy.typing as npt
 
 from .radial_wave_function import radial_distribution
-from .spherical_harmonic import spherical_harmonic
-from .wavefunction import wavefunction, radial_axis
+from .spherical_harmonic import spherical_harmonic, spherical_harmonic_real
+from .wavefunction import Basis, wavefunction, radial_axis
 
 
 def sample_orbital(
@@ -17,7 +17,8 @@ def sample_orbital(
     resolution_r: int = 4096,
     resolution_theta: int = 256,
     resolution_phi: int = 512,
-    add_jitter: bool = False,
+    add_jitter: bool = True,
+    basis: Basis = "complex",
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, tuple[np.ndarray, np.ndarray]]:
     """Inverse-transform sample - Separate radial and angular parts."""
 
@@ -29,7 +30,7 @@ def sample_orbital(
 
     # Angular PDA & CDA
     theta_grid, phi_grid, pda_omega, cda_omega = build_angular_pda_cda(
-        l, m, resolution_theta, resolution_phi
+        l, m, resolution_theta, resolution_phi, basis
     )
 
     # Sample Radial
@@ -63,7 +64,7 @@ def sample_orbital(
         phi_samples = np.mod(phi_samples, 2.0 * np.pi)
 
     # Re-evaluate psi at sampled points
-    psi = wavefunction(n, l, m, r_samples, theta_samples, phi_samples)
+    psi = wavefunction(n, l, m, r_samples, theta_samples, phi_samples, basis=basis)
 
     return r_samples, theta_samples, phi_samples, psi
 
@@ -87,7 +88,11 @@ def build_radial_pda_cda(
 
 
 def build_angular_pda_cda(
-    l: int, m: int, theta_resolution: int, phi_resolution: int
+    l: int,
+    m: int,
+    theta_resolution: int,
+    phi_resolution: int,
+    basis: Basis,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Build angular probability density array and cumulative distribution array."""
 
@@ -97,8 +102,13 @@ def build_angular_pda_cda(
     theta_mesh, phi_mesh = np.meshgrid(theta_grid, phi_grid, indexing="ij")
 
     # Compute PDA
-    Y_re, Y_im = spherical_harmonic(l, m, theta_mesh, phi_mesh)
-    pda = Y_re**2 + Y_im**2
+    if basis == "complex":
+        Y_re, Y_im = spherical_harmonic(l, m, theta_mesh, phi_mesh)
+        pda = Y_re**2 + Y_im**2
+    else:
+        Y = spherical_harmonic_real(l, m, theta_mesh, phi_mesh)
+        pda = Y**2
+
     pda *= np.sin(theta_mesh)  # Jacobian factor
 
     # Compute CDA (flattened using row-major order)

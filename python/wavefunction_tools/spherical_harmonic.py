@@ -32,3 +32,21 @@ def spherical_harmonic(
     re = normalisation * legendre * complex_exponential_real
     im = normalisation * legendre * complex_exponential_imag
     return re, im
+
+
+def spherical_harmonic_real(
+    l: int, m: int, theta: npt.ArrayLike, phi: npt.ArrayLike
+) -> np.ndarray:
+    """Real-form spherical harmonic Y_{lm}^real, as a real linear combination of +-m"""
+    theta = np.asarray(theta, dtype=float)
+    phi = np.asarray(phi, dtype=float)
+
+    mp = abs(m)
+    phase = cspf(mp)
+    re, im = spherical_harmonic(l, mp, theta, phi)
+
+    if m == 0:
+        return re
+    if m < 0:
+        return np.sqrt(2.0) * phase * im
+    return np.sqrt(2.0) * phase * re

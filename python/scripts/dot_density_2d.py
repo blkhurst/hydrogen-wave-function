@@ -60,6 +60,7 @@ def main():
         axis_limit=axis_limit,
         axis_resolution=axis_resolution,
         add_jitter=False,
+        basis="complex",
     )
 
     # Color

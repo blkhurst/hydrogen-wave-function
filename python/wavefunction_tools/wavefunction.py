@@ -1,13 +1,23 @@
 import numpy as np
 import numpy.typing as npt
+from typing import Literal
 
 from .radial_wave_function import radial_distribution, radial_wave_function
-from .spherical_harmonic import spherical_harmonic
+from .spherical_harmonic import spherical_harmonic, spherical_harmonic_real
 from .utilities import cartesian_to_spherical
 
 
+Basis = Literal["complex", "real"]
+
+
 def wavefunction(
-    n: int, l: int, m: int, r: npt.ArrayLike, theta: npt.ArrayLike, phi: npt.ArrayLike
+    n: int,
+    l: int,
+    m: int,
+    r: npt.ArrayLike,
+    theta: npt.ArrayLike,
+    phi: npt.ArrayLike,
+    basis: Basis = "complex",
 ) -> tuple[np.ndarray, np.ndarray]:
     """Hydrogen wave function psi_{nlm}(r,theta,phi)."""
     r = np.asarray(r, dtype=float)
@@ -15,8 +25,14 @@ def wavefunction(
     phi = np.asarray(phi, dtype=float)
 
     R = radial_wave_function(n, l, r)
-    Y_re, Y_im = spherical_harmonic(l, m, theta, phi)
 
+    if basis == "real":
+        Y_re = spherical_harmonic_real(l, m, theta, phi)
+        real = R * Y_re
+        imag = np.zeros_like(real)
+        return real, imag
+
+    Y_re, Y_im = spherical_harmonic(l, m, theta, phi)
     real = R * Y_re
     imag = R * Y_im
 
@@ -24,11 +40,17 @@ def wavefunction(
 
 
 def wavefunction_cartesian(
-    n: int, l: int, m: int, x: npt.ArrayLike, y: npt.ArrayLike, z: npt.ArrayLike
+    n: int,
+    l: int,
+    m: int,
+    x: npt.ArrayLike,
+    y: npt.ArrayLike,
+    z: npt.ArrayLike,
+    basis: Basis = "complex",
 ) -> tuple[np.ndarray, np.ndarray]:
     """Hydrogen wave function psi_{nlm}(x,y,z)."""
     r, theta, phi = cartesian_to_spherical(x, y, z)
-    return wavefunction(n, l, m, r, theta, phi)
+    return wavefunction(n, l, m, r, theta, phi, basis=basis)
 
 
 def wavefunction_slice_cartesian(
@@ -38,27 +60,15 @@ def wavefunction_slice_cartesian(
     plane: str,
     u: npt.ArrayLike,
     v: npt.ArrayLike,
+    basis: Basis = "complex",
 ) -> tuple[np.ndarray, np.ndarray]:
     """Hydrogen wave function psi_{nlm}(x,y,z) on a 2D plane."""
-
     u = np.asarray(u, dtype=float)
     v = np.asarray(v, dtype=float)
 
-    offset = 0.0
-    if plane == "xy":
-        x, y = u, v
-        z = np.full_like(x, offset, dtype=float)
-    elif plane == "xz":
-        x, z = u, v
-        y = np.full_like(x, offset, dtype=float)
-    elif plane == "yz":
-        y, z = u, v
-        x = np.full_like(y, offset, dtype=float)
-    else:
-        raise ValueError("plane must be one of: 'xy', 'xz', 'yz'")
-
+    x, y, z = _plane_to_xyz(plane, u, v)
     r, theta, phi = cartesian_to_spherical(x, y, z)
-    return wavefunction(n, l, m, r, theta, phi)
+    return wavefunction(n, l, m, r, theta, phi, basis=basis)
 
 
 def radial_axis(n: int, l: int, tail: float = 1e-3) -> float:
@@ -71,8 +81,16 @@ def radial_axis(n: int, l: int, tail: float = 1e-3) -> float:
     return float(r[np.searchsorted(cdf, 1.0 - tail)])
 
 
-def probability_density(re: npt.ArrayLike, im: npt.ArrayLike) -> np.ndarray:
-    """Return |psi|^2 from real/imag parts."""
-    re = np.asarray(re, dtype=float)
-    im = np.asarray(im, dtype=float)
-    return re * re + im * im
+def _plane_to_xyz(plane: str, u: np.ndarray, v: np.ndarray, offset: float = 0.0):
+    if plane == "xy":
+        x, y = u, v
+        z = np.full_like(x, offset, dtype=float)
+    elif plane == "xz":
+        x, z = u, v
+        y = np.full_like(x, offset, dtype=float)
+    elif plane == "yz":
+        y, z = u, v
+        x = np.full_like(y, offset, dtype=float)
+    else:
+        raise ValueError("plane must be one of: 'xy', 'xz', 'yz'")
+    return x, y, z

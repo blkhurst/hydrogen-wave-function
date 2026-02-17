@@ -72,6 +72,23 @@ Since $|e^{-iE_n t/\hbar}|^2 = 1$, the **probability density is time-independent
 \Psi(\mathbf r,t)=\alpha\,\psi_a(\mathbf r)e^{-iE_a t/\hbar} + \beta\,\psi_b(\mathbf r)e^{-iE_b t/\hbar}
 ```
 
+### Real orbitals
+
+In physics it's common to work with the **complex** orbitals $\psi_{nlm}(r,\theta,\varphi)=R_{nl}(r)Y_l^m(\theta,\varphi)$. In chemistry, plots often use **real orbitals**, which are **real linear combinations** of the $\pm m$ complex states. These real combinations are equally valid quantum states, they're used because they produce orbitals aligned along a Cartesian axis (useful for visualising bonding and symmetry).
+
+```math
+\begin{aligned}
+\psi_{nlm}^{\text{real}} &=
+\begin{cases}
+\psi_{nl|m|} & \text{ for } m=0 \\[2pt]
+\sqrt{2} \, (-1)^m \, \text{Im} \left\{\psi_{nl|m|}\right\} & \text{ for } m<0 \\[2pt]
+\sqrt{2} \, (-1)^m \, \text{Re} \left\{\psi_{nl|m|}\right\} & \text{ for } m>0
+\end{cases} \\[4pt]
+\end{aligned}
+```
+
+> This definition assumes the Condon-Shortley phase convention is used, regardless of whether it's implemented within $Y_l^m$ or $P_l^m$.
+
 ## Resources
 
 - [Wave function - Wikipedia](https://en.wikipedia.org/wiki/Wave_function#Hydrogen_atom)
