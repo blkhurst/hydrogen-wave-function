@@ -1,7 +1,7 @@
 import numpy as np
 import numpy.typing as npt
 
-from .wavefunction import wavefunction_slice_cartesian, radial_axis
+from .wavefunction import Basis, wavefunction_slice_cartesian, radial_axis
 
 
 def sample_orbital_plane(
@@ -11,8 +11,9 @@ def sample_orbital_plane(
     num_samples: int = 10000,
     plane: str = "xy",  # xy, xz, yz
     axis_limit: float | None = None,
-    axis_resolution: int = 4096,
-    add_jitter: bool = False,
+    axis_resolution: int = 1024,
+    add_jitter: bool = True,
+    basis: Basis = "complex",
 ) -> tuple[np.ndarray, np.ndarray, tuple[np.ndarray, np.ndarray]]:
     """Inverse-transform sample - XY, XZ, or YZ plane."""
 
@@ -21,7 +22,7 @@ def sample_orbital_plane(
 
     # Plane PDA & CDA
     x_grid, y_grid, pda, cda = build_plane_pda_cda(
-        n, l, m, plane, axis_limit, axis_resolution
+        n, l, m, plane, axis_limit, axis_resolution, basis
     )
 
     # Sample Radial
@@ -43,7 +44,9 @@ def sample_orbital_plane(
         # Clamp?
 
     # Re-evaluate psi at sampled points
-    psi = wavefunction_slice_cartesian(n, l, m, plane, x_samples, y_samples)
+    psi = wavefunction_slice_cartesian(
+        n, l, m, plane, x_samples, y_samples, basis=basis
+    )
 
     return x_samples, y_samples, psi
 
@@ -55,6 +58,7 @@ def build_plane_pda_cda(
     plane: str,
     axis_limit: float,
     axis_resolution: int,
+    basis: Basis,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Build plane probability density array and cumulative distribution array."""
 
@@ -67,7 +71,7 @@ def build_plane_pda_cda(
     x_mesh, y_mesh = np.meshgrid(x_grid, y_grid, indexing="ij")
 
     # Compute PDA (no Jacobian required since plane is Cartesian) #? Should I discrete re-normalise?
-    re, im = wavefunction_slice_cartesian(n, l, m, plane, x_mesh, y_mesh)
+    re, im = wavefunction_slice_cartesian(n, l, m, plane, x_mesh, y_mesh, basis=basis)
     pda = re**2 + im**2
 
     # Compute CDA
