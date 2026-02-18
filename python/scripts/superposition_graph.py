@@ -90,12 +90,8 @@ def main():
         k = seg % (len(states) - 1)
 
         # Time-dependence
-        n1 = states[k][0]
-        n2 = states[k + 1][0]
-        l1 = states[k][1]
-        l2 = states[k + 1][1]
-        m1 = states[k][2]
-        m2 = states[k + 1][2]
+        (n1, l1, m1) = states[k]
+        (n2, l2, m2) = states[k + 1]
         factor = t if time_dependent else mix_factor
         td1 = time_dependent_factor(n1, factor)
         td2 = time_dependent_factor(n2, factor)
