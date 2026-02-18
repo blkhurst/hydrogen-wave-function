@@ -1,7 +1,7 @@
 import numpy as np
 import numpy.typing as npt
 
-from .wavefunction import Basis, wavefunction_slice_cartesian, radial_axis
+from .wavefunction import Plane, Basis, wavefunction_slice_cartesian, radial_axis
 
 
 def sample_orbital_plane(
@@ -9,7 +9,7 @@ def sample_orbital_plane(
     l: int,
     m: int,
     num_samples: int = 10000,
-    plane: str = "xy",  # xy, xz, yz
+    plane: Plane = "xy",
     axis_limit: float | None = None,
     axis_resolution: int = 1024,
     add_jitter: bool = True,
@@ -55,7 +55,7 @@ def build_plane_pda_cda(
     n: int,
     l: int,
     m: int,
-    plane: str,
+    plane: Plane,
     axis_limit: float,
     axis_resolution: int,
     basis: Basis,

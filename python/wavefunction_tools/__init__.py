@@ -6,6 +6,7 @@ from .wavefunction import (
     wavefunction,
     wavefunction_cartesian,
     wavefunction_slice_cartesian,
+    wavefunction_line_cartesian,
     radial_axis,
 )
 from .utilities import (

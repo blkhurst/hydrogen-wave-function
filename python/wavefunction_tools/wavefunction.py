@@ -7,6 +7,8 @@ from .spherical_harmonic import spherical_harmonic, spherical_harmonic_real
 from .utilities import cartesian_to_spherical
 
 
+Axis = Literal["x", "y", "z"]
+Plane = Literal["xy", "xz", "yz"]
 Basis = Literal["complex", "real"]
 
 
@@ -57,7 +59,7 @@ def wavefunction_slice_cartesian(
     n: int,
     l: int,
     m: int,
-    plane: str,
+    plane: Plane,
     u: npt.ArrayLike,
     v: npt.ArrayLike,
     basis: Basis = "complex",
@@ -67,8 +69,21 @@ def wavefunction_slice_cartesian(
     v = np.asarray(v, dtype=float)
 
     x, y, z = _plane_to_xyz(plane, u, v)
-    r, theta, phi = cartesian_to_spherical(x, y, z)
-    return wavefunction(n, l, m, r, theta, phi, basis=basis)
+    return wavefunction_cartesian(n, l, m, x, y, z, basis=basis)
+
+
+def wavefunction_line_cartesian(
+    n: int,
+    l: int,
+    m: int,
+    axis: Axis,
+    u: npt.ArrayLike,
+    basis: Basis = "complex",
+) -> tuple[np.ndarray, np.ndarray]:
+    """Hydrogen wave function psi_{nlm}(x,y,z) on a 1D line."""
+    u = np.asarray(u, dtype=float)
+    x, y, z = _axis_to_xyz(axis, u)
+    return wavefunction_cartesian(n, l, m, x, y, z, basis=basis)
 
 
 def radial_axis(n: int, l: int, tail: float = 1e-3) -> float:
@@ -81,7 +96,9 @@ def radial_axis(n: int, l: int, tail: float = 1e-3) -> float:
     return float(r[np.searchsorted(cdf, 1.0 - tail)])
 
 
-def _plane_to_xyz(plane: str, u: np.ndarray, v: np.ndarray, offset: float = 0.0):
+def _plane_to_xyz(
+    plane: Plane, u: npt.ArrayLike, v: npt.ArrayLike, offset: float = 0.0
+):
     if plane == "xy":
         x, y = u, v
         z = np.full_like(x, offset, dtype=float)
@@ -93,4 +110,22 @@ def _plane_to_xyz(plane: str, u: np.ndarray, v: np.ndarray, offset: float = 0.0)
         x = np.full_like(y, offset, dtype=float)
     else:
         raise ValueError("plane must be one of: 'xy', 'xz', 'yz'")
+    return x, y, z
+
+
+def _axis_to_xyz(axis: Axis, u: npt.ArrayLike, offset: float = 0.0):
+    if axis == "x":
+        x = u
+        y = np.full_like(x, offset, dtype=float)
+        z = np.full_like(x, offset, dtype=float)
+    elif axis == "y":
+        y = u
+        x = np.full_like(y, offset, dtype=float)
+        z = np.full_like(y, offset, dtype=float)
+    elif axis == "z":
+        z = u
+        x = np.full_like(z, offset, dtype=float)
+        y = np.full_like(z, offset, dtype=float)
+    else:
+        raise ValueError("axis must be one of: 'x', 'y', 'z'")
     return x, y, z
