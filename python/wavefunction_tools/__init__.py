@@ -15,6 +15,7 @@ from .utilities import (
     complex_phase,
     complex_magnitude,
     complex_magnitude_squared,
+    complex_multiply,
 )
 from .sample import sample_orbital
 from .sample_plane import sample_orbital_plane

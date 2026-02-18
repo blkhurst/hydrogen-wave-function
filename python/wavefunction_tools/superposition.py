@@ -2,13 +2,15 @@ import numpy as np
 import numpy.typing as npt
 
 
-def time_dependent_factor(n: float, time: float, hbar: float = 1.0) -> complex:
+def time_dependent_factor(
+    n: float, time: float, hbar: float = 1.0
+) -> tuple[np.ndarray, np.ndarray]:
     """Calculate the time-dependent factor for a given principal quantum number n and time."""
     energy = -(13.6 / (n**2))
     exponent = -energy * time / hbar
     e_real = np.cos(exponent)
     e_imag = np.sin(exponent)
-    return e_real + 1j * e_imag
+    return e_real, e_imag
 
 
 def superpose_wavefunctions(

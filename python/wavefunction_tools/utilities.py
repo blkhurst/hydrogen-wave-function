@@ -88,3 +88,15 @@ def complex_magnitude_squared(re: npt.ArrayLike, im: npt.ArrayLike) -> np.ndarra
     re = np.asarray(re, dtype=float)
     im = np.asarray(im, dtype=float)
     return re * re + im * im
+
+
+def complex_multiply(
+    z1: tuple[npt.ArrayLike, npt.ArrayLike],
+    z2: tuple[npt.ArrayLike, npt.ArrayLike],
+) -> tuple[np.ndarray, np.ndarray]:
+    """Multiply two complex numbers."""
+    re1, im1 = z1
+    re2, im2 = z2
+    re_product = re1 * re2 - im1 * im2
+    im_product = re1 * im2 + im1 * re2
+    return re_product, im_product
