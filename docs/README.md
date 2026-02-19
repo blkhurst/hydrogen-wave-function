@@ -17,7 +17,10 @@ Notes and derivations supporting the hydrogen wavefunction implementation and vi
 - Implementation
   - [Sampling](./Sampling.md)
 - Derivations
-  - [Deriving the 1s orbital](./derivations/deriving_1s.md)
+  - [$\psi_{100}$ (1s orbital)](./derivations/deriving_1s.md)
+  - [$P_2^0$](./derivations/deriving_P20.md)
+  - [$P_2^2$](./derivations/deriving_P22.md)
+  - [$L_2^2$](./derivations/deriving_L22.md)
 
 ## Conventions
 
